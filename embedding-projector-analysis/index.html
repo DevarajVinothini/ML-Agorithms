@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedding Projector Analysis | Vinothini Devaraj</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --accent: #7c3aed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero .meta {
+            font-size: 0.95rem;
+            opacity: 0.75;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 1.5rem;
+            left: 2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            z-index: 2;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        /* Figures */
+        .figure {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .figure img:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .figure figcaption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Settings table */
+        .settings-table td:first-child {
+            font-weight: 600;
+            color: var(--text);
+            width: 180px;
+        }
+
+        /* Observation callout */
+        .observation {
+            background: linear-gradient(135deg, #eff6ff, #f0f0ff);
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .observation strong {
+            color: var(--primary);
+        }
+
+        /* References */
+        .references {
+            font-size: 0.9rem;
+        }
+
+        .references p {
+            padding-left: 2em;
+            text-indent: -2em;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .references a {
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 92vw;
+            max-height: 92vh;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero { padding: 3rem 1.5rem 2rem; }
+            .hero h1 { font-size: 1.6rem; }
+            .section { padding: 1.25rem; }
+            .back-link { top: 1rem; left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <a href="../" class="back-link">← Back to Portfolio</a>
+    <div class="hero-content">
+        <h1>Exploring Word Embeddings with the TensorFlow Embedding Projector</h1>
+        <p class="subtitle">Vinothini Devaraj</p>
+        <p class="meta">MS in Artificial Intelligence, Indiana Wesleyan University &nbsp;|&nbsp; November 9, 2026</p>
+        <div class="tags">
+            <span class="tag">Word Embeddings</span>
+            <span class="tag">Word2Vec</span>
+            <span class="tag">PCA</span>
+            <span class="tag">TensorFlow</span>
+            <span class="tag">NLP</span>
+            <span class="tag">Dimensionality Reduction</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- 1. Introduction -->
+    <section class="section">
+        <h2>1. Introduction: What Are Embeddings?</h2>
+        <p>Machine learning models work with numbers, not words, images, or products. An <strong>embedding</strong> is a way of turning an item into a list of numbers, called a <em>vector</em>, so that a model can compare it with other items. Each vector is a point in a high-dimensional space. The Word2Vec model used in the Embedding Projector, for example, represents each word with 200 numbers, so every word becomes a point in a 200-dimensional space.</p>
+
+        <p>What makes embeddings useful is that <strong>position carries meaning</strong>. During training, the model learns to place items that appear in similar contexts close together and items used in different contexts far apart. "Doctor" ends up near "nurse" and "hospital" because those words appear in similar sentences, not because anyone programmed that link. Closeness is usually measured with <em>cosine similarity</em> or <em>Euclidean distance</em>, which lets a program answer questions such as "which words are most similar to this one?"</p>
+
+        <p>Embeddings matter because they let models <strong>generalize</strong>. A text classifier can treat "excellent" and "outstanding" as similar even if it saw only one of them in training. Recommendation systems use embeddings of users and products to suggest items similar to what someone already likes, and image recognition systems embed pictures so that similar images land near each other. Language models, search engines, and retrieval-augmented generation (RAG) systems all depend on embeddings to find relevant information by meaning rather than exact keyword match.</p>
+
+        <p>People cannot picture 200 dimensions, so tools like the <strong>TensorFlow Embedding Projector</strong> use dimensionality reduction (PCA, t-SNE, or UMAP) to project the vectors into two or three dimensions. This assignment uses that tool to look at how a set of words is arranged and what the neighborhoods reveal.</p>
+    </section>
+
+    <!-- 2. Method -->
+    <section class="section">
+        <h2>2. Method</h2>
+        <p>I opened the TensorFlow Embedding Projector (<a href="https://projector.tensorflow.org/" target="_blank">projector.tensorflow.org</a>) and loaded the Word2Vec dataset.</p>
+
+        <div class="table-wrapper">
+            <table class="settings-table">
+                <tr><td>Dataset</td><td>Word2Vec 10K (10,000 points, 200 dimensions)</td></tr>
+                <tr><td>Projection</td><td>PCA, components 1–3 in a 3D view (total variance described: 8.5%)</td></tr>
+                <tr><td>Sphereize data</td><td>On</td></tr>
+                <tr><td>Distance metric</td><td>Cosine</td></tr>
+            </table>
+        </div>
+
+        <figure class="figure">
+            <img src="images/figure1.png" alt="Full Word2Vec 10K dataset in the Embedding Projector before any search" onclick="openLightbox(this)">
+            <figcaption>Figure 1. The full Word2Vec 10K dataset in the Embedding Projector before any search (PCA, 3D view).</figcaption>
+        </figure>
+
+        <p>Figure 1 shows the whole dataset before any search. For each word below, I typed it into the Search box, selected the matching point, and recorded the nearest neighbors the Projector listed in the right-hand panel, along with the cluster shape I saw in the visualization. I chose the words to cover different kinds of meaning: a title, a technology term, a profession, an emotion, and a place.</p>
+    </section>
+
+    <!-- 3. Exploration and Observations -->
+    <section class="section">
+        <h2>3. Exploration and Observations</h2>
+
+        <!-- 3.1 King -->
+        <h3>3.1 Search term: "king"</h3>
+        <p>I chose "king" as a person/title word, to test whether related roles (queen, prince, emperor) cluster together.</p>
+
+        <figure class="figure">
+            <img src="images/figure2.png" alt="Search results for king in the PCA view" onclick="openLightbox(this)">
+            <figcaption>Figure 2. Search results for "king" (33 matches) highlighted in the PCA view of Word2Vec 10K.</figcaption>
+        </figure>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Group</th><th>Words visible in Figure 2</th><th>What it shows</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Related in meaning to "king"</td>
+                        <td>king, kings, kingdom, kingdoms, viking, vikings, buckingham</td>
+                        <td>Royalty and history words; they appear in the left half of the view</td>
+                    </tr>
+                    <tr>
+                        <td>Share only the letters "king"</td>
+                        <td>making, working, taking, speaking, looking, thinking, breaking, seeking, drinking, striking, cooking, tracking, blocking, checking, smoking, linking, walking, lacking, ranking, banking, networking</td>
+                        <td>Matched by spelling only; these are grammatical -ing forms</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>33 matches reported by the Projector (28 visible in the screenshot)</td>
+                        <td>The Search box finds any word containing "king"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="observation">
+            <strong>Observation:</strong> The Search box matches any word that contains the letters typed, so "king" returned 33 matches rather than only words close in meaning. Many of them are ordinary -ing forms such as <em>making, working, looking,</em> and <em>speaking</em>, which is a reminder that the search box finds spelling matches, while the nearest-neighbor list shows similarity in meaning. The matches that are related to "king" in meaning (<em>kings, kingdom, kingdoms, viking, vikings,</em> and <em>buckingham</em>) appeared in the left half of the view, while verbs ending in -ing such as <em>cooking, smoking, drinking, walking,</em> and <em>striking</em> were spread across the center and right side. This suggests the model groups words by how they are used: royalty and history words by topic, and -ing verbs by grammatical form. The 3D PCA view describes only 8.5% of the variance, so these positions are approximate.
+        </div>
+
+        <!-- 3.2 Computer -->
+        <h3>3.2 Search term: "computer"</h3>
+        <p>I chose "computer" as a technology word, to see how closely related forms of the same word sit together.</p>
+
+        <figure class="figure">
+            <img src="images/figure3.png" alt="Search results for computer in the PCA view" onclick="openLightbox(this)">
+            <figcaption>Figure 3. Search results for "computer" (2 matches) in the PCA view of Word2Vec 10K.</figcaption>
+        </figure>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Group</th><th>Words in Figure 3</th><th>What it shows</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matches for "computer"</td>
+                        <td>computer, computers</td>
+                        <td>Two forms of the same word; both are highlighted</td>
+                    </tr>
+                    <tr>
+                        <td>Position in the view</td>
+                        <td>computer and computers sit very close together in the lower-left region</td>
+                        <td>Singular and plural share almost the same vector</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="observation">
+            <strong>Observation:</strong> Only two matches appeared, and both are forms of the same word. In the PCA view, computer and computers sit very close together in the lower-left region of the point cloud, which makes sense because a singular noun and its plural appear in nearly the same contexts. Their proximity shows that Word2Vec treats inflected forms as near-synonyms. A nearest-neighbor check would likely reveal words such as <em>software, hardware,</em> and <em>technology</em> nearby. The word "computer" appears 5,874 times in the training data, so its vector rests on strong evidence.
+        </div>
+
+        <!-- 3.3 Doctor -->
+        <h3>3.3 Search term: "doctor"</h3>
+        <p>I chose "doctor" as a profession word, to see whether related roles or titles cluster together.</p>
+
+        <figure class="figure">
+            <img src="images/figure4.png" alt="Search results for doctor in the PCA view" onclick="openLightbox(this)">
+            <figcaption>Figure 4. Search results for "doctor" (3 matches) in the PCA view of Word2Vec 10K.</figcaption>
+        </figure>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Group</th><th>Words in Figure 4</th><th>What it shows</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matches for "doctor"</td>
+                        <td>doctor, doctors, doctorate</td>
+                        <td>Three related forms; doctor and doctors are labeled side by side</td>
+                    </tr>
+                    <tr>
+                        <td>Position in the view</td>
+                        <td>doctor and doctors are labeled side by side in the lower-right region; doctorate is nearby but slightly above</td>
+                        <td>Inflected forms cluster tightly; a derived form (doctorate) sits close but not identical</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="observation">
+            <strong>Observation:</strong> Three matches appeared: <em>doctor, doctors,</em> and <em>doctorate</em>. The first two are labeled side by side in the lower-right region, and doctorate is nearby but slightly above. This pattern is similar to computer/computers: inflected forms land almost on top of each other. Doctorate shifts slightly because it is used in academic contexts ("earned a doctorate") rather than medical ones ("see a doctor"), showing that the model distinguishes these senses by context.
+        </div>
+
+        <!-- 3.4 Happy -->
+        <h3>3.4 Search term: "happy"</h3>
+        <p>I chose "happy" as an emotion word, to see which words share its neighborhood and whether they are synonyms.</p>
+
+        <figure class="figure">
+            <img src="images/figure5.png" alt="Nearest neighbors of happy in the PCA view" onclick="openLightbox(this)">
+            <figcaption>Figure 5. Nearest neighbors of "happy" in the PCA view of Word2Vec 10K (neighbor slider set to 882).</figcaption>
+        </figure>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Rank</th><th>Neighbor</th><th>Distance</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>quiet</td><td>1.191</td></tr>
+                    <tr><td>2</td><td>funny</td><td>1.194</td></tr>
+                    <tr><td>3</td><td>love</td><td>1.194</td></tr>
+                    <tr><td>4</td><td>lucky</td><td>1.196</td></tr>
+                    <tr><td>5</td><td>beautiful</td><td>1.197</td></tr>
+                    <tr><td>6</td><td>remember</td><td>1.198</td></tr>
+                    <tr><td>7</td><td>kids</td><td>1.198</td></tr>
+                    <tr><td>8</td><td>wonderful</td><td>1.199</td></tr>
+                    <tr><td>9</td><td>enjoy</td><td>1.199</td></tr>
+                    <tr><td>10</td><td>you</td><td>1.199</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="observation">
+            <strong>Observation:</strong> The closest neighbor of "happy" is "quiet" (distance 1.191), followed by <em>funny, love, lucky, beautiful, remember, kids, wonderful, enjoy,</em> and <em>you</em>. These are words that frequently appear in similar conversational and positive-sentiment contexts. Notably, traditional synonyms or opposites such as "sad" or "glad" are not in the top ten. This shows that Word2Vec groups words by the contexts they share rather than by dictionary meaning, so neighbors reflect <strong>association</strong> as much as similarity. The distances are also fairly large, which may be because "happy" appears only 421 times in the training text, far fewer than a word like "king" (7,456), so its vector rests on less evidence.
+        </div>
+
+        <!-- 3.5 Paris -->
+        <h3>3.5 Search term: "paris"</h3>
+        <p>I chose "paris" as a place word, to see how it compares with similarly spelled words.</p>
+
+        <figure class="figure">
+            <img src="images/figure6.png" alt="Search results for paris in the PCA view" onclick="openLightbox(this)">
+            <figcaption>Figure 6. Search results for "paris" (4 matches) in the PCA view of Word2Vec 10K.</figcaption>
+        </figure>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Group</th><th>Words in Figure 6</th><th>What it shows</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matches for "paris"</td>
+                        <td>paris, parish, comparison, comparisons</td>
+                        <td>Four matches; "comparison" and "comparisons" contain the letters "paris" inside a longer word</td>
+                    </tr>
+                    <tr>
+                        <td>Position in the view</td>
+                        <td>paris and parish are labeled side by side at about the same height in the lower middle; comparison sits above them near the center</td>
+                        <td>Paris and parish sit close together even though only one is a city name</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="observation">
+            <strong>Observation:</strong> Searching for "paris" returned four matches: <em>paris, parish, comparison,</em> and <em>comparisons</em>. The last two match only because the letters "paris" are hidden inside a longer word, so they show how the Search box works rather than anything about meaning. Paris and parish are labeled side by side at about the same height in the lower middle of the view, while comparison sits higher, near the center. Both <em>paris</em> and <em>parish</em> can refer to places or districts, so their closeness may reflect shared contexts, but it could also be a quirk of the approximate 3D view, since PCA describes only 8.5% of the variance.
+        </div>
+
+        <!-- 3.6 Patterns -->
+        <h3>3.6 Patterns across all searches</h3>
+        <p>Across the five searches, the Search box returned spelling matches, so each word came back with its variants: <em>king</em> with <em>kings</em> and <em>kingdom</em>, <em>computer</em> with <em>computers</em>, <em>doctor</em> with <em>doctors</em> and <em>doctorate</em>, and <em>paris</em> with <em>parish</em>. Where an inflected pair appeared (computer and computers, doctor and doctors, paris and parish), the two points sat close together in the PCA view, which suggests that words with similar forms and similar contexts land in the same region. Words that matched only through hidden letters, such as <em>making</em> for "king" or <em>comparison</em> for "paris," were not grouped with them.</p>
+
+        <p>The only true nearest-neighbor list I captured was for "happy," and it showed that neighbors are organized by shared context (<em>funny, love, lucky, kids</em>) rather than strict synonymy, since "quiet" and "you" ranked among the closest. Frequency in the training text probably matters as well: "happy" (421 occurrences) has far less evidence behind it than "computer" (5,874) or "king" (7,456).</p>
+
+        <p>Finally, the 3D PCA view describes only <strong>8.5% of the variance</strong>, so every position described here is approximate.</p>
+    </section>
+
+    <!-- 4. Reflection -->
+    <section class="section">
+        <h2>4. Reflection</h2>
+        <p>Exploring the Embedding Projector made "meaning as position" concrete. Related forms such as <em>computer</em> and <em>computers</em> or <em>doctor</em> and <em>doctors</em> landed near each other, and the neighbors of "happy" (<em>funny, love, lucky, kids, beautiful</em>) showed that the model groups words by the contexts they share. Surprisingly, the closest neighbor of "happy" was "quiet," and words like "you" and "remember" appeared too, so embeddings capture <strong>association</strong> rather than strict synonymy.</p>
+
+        <p>I also learned to read the tool carefully. The Search box matches spelling, so "king" returned <em>making</em> and <em>working</em>, and only the nearest-neighbor list reflects similarity in meaning. The PCA view squeezes 200 dimensions into three and describes only 8.5% of the variance, so distances on screen are approximate. Word frequency matters too: "happy" appears 421 times against 7,456 for "king," which may make its vector less reliable.</p>
+
+        <p>For applications such as search and retrieval-augmented generation, this means embeddings are powerful but should be checked, because they inherit the patterns and gaps of their training text.</p>
+    </section>
+
+    <!-- References -->
+    <section class="section references">
+        <h2>References</h2>
+        <p>Google for Developers. (n.d.). Embeddings. <em>Machine Learning Crash Course</em>. <a href="https://developers.google.com/machine-learning/crash-course/embeddings" target="_blank">https://developers.google.com/machine-learning/crash-course/embeddings</a></p>
+        <p>Smilkov, D., Thorat, N., Nicholson, C., Reif, E., Viégas, F. B., &amp; Wattenberg, M. (2016). Embedding Projector: Interactive visualization and interpretation of embeddings. <em>arXiv</em>. <a href="https://arxiv.org/abs/1611.05469" target="_blank">https://arxiv.org/abs/1611.05469</a></p>
+        <p>TensorFlow. (n.d.). Embedding Projector. <a href="https://projector.tensorflow.org/" target="_blank">https://projector.tensorflow.org/</a></p>
+    </section>
+
+</main>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+    function openLightbox(img) {
+        const lb = document.getElementById('lightbox');
+        document.getElementById('lightbox-img').src = img.src;
+        lb.classList.add('active');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+
+</body>
+</html>
